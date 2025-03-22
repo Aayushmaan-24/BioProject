@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNA to RNA Converter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>DNA to RNA Converter</h1>
+            <button id="themeToggle">🌙 Dark Mode</button>
+        </header>
+
+        <div class="input-section">
+            <h2>Enter DNA Sequence:</h2>
+            <textarea id="dnaInput" rows="4" placeholder="Enter DNA sequence (A, T, C, G)"></textarea>
+        </div>
+
+        <div class="output-section">
+            <div class="result">
+                <h2>RNA Sequence:</h2>
+                <p id="rnaOutput"></p>
+                <button id="copyBtn" onclick="copyRNA()">Copy RNA</button>
+            </div>
+            <div class="codon-section">
+                <h3>Codons & Amino Acids:</h3>
+                <ul id="codonList"></ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Created with 💡 by Aayushmaan</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
