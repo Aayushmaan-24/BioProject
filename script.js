@@ -1,4 +1,3 @@
-// Full RNA Codon to Amino Acid Map
 const codonToAminoAcid = {
     "UUU": "Phe", "UUC": "Phe", "UUA": "Leu", "UUG": "Leu",
     "CUU": "Leu", "CUC": "Leu", "CUA": "Leu", "CUG": "Leu",
@@ -18,7 +17,6 @@ const codonToAminoAcid = {
     "GGU": "Gly", "GGC": "Gly", "GGA": "Gly", "GGG": "Gly"
 };
 
-// Common Restriction Enzymes (DNA-specific)
 const restrictionEnzymes = {
     "EcoRI": "GAATTC",
     "BamHI": "GGATCC",
@@ -26,7 +24,6 @@ const restrictionEnzymes = {
     "PstI": "CTGCAG"
 };
 
-// DOM Elements
 const dnaInput = document.getElementById("dnaInput");
 const rnaOutput = document.getElementById("rnaOutput");
 const codonList = document.getElementById("codonList");
@@ -45,7 +42,6 @@ const baseFreqChart = document.getElementById("baseFreqChart");
 const compareInput = document.getElementById("compareInput");
 const alignmentOutput = document.getElementById("alignmentOutput");
 
-// Convert DNA to RNA or RNA to DNA
 function convertSequence() {
     let inputSequence = dnaInput.value.toUpperCase().trim();
     let isReverse = reverseMode.checked;
@@ -80,10 +76,9 @@ function convertSequence() {
     validationFeedback.innerText = "";
     rnaOutput.innerText = outputText;
 
-    // Complementary Strand (Fixed logic)
     let complementText = "";
     if (showComplement.checked) {
-        complementText = getComplement(outputText, !isReverse); // RNA rules for RNA output, DNA rules for DNA output
+        complementText = getComplement(outputText, !isReverse);
         if (reverseComplement.checked) {
             complementText = complementText.split("").reverse().join("");
         }
@@ -92,7 +87,6 @@ function convertSequence() {
         complementOutput.innerText = "";
     }
 
-    // Codons, Amino Acids, Protein, and ORFs
     let codons = [];
     let aminoAcids = [];
     let proteinSequence = "";
@@ -128,15 +122,12 @@ function convertSequence() {
         orfList.innerHTML = "";
     }
 
-    // Restriction Sites
     let restrictionSites = findRestrictionSites(dnaSequence);
     restrictionList.innerHTML = restrictionSites.length ? restrictionSites.map(site => `<li>${site}</li>`).join("") : "<li>No restriction sites found</li>";
 
-    // Palindromes
     let palindromes = findPalindromes(inputSequence);
     palindromeList.innerHTML = palindromes.length ? palindromes.map(p => `<li>${p}</li>`).join("") : "<li>No palindromes found</li>";
 
-    // Base Frequency Chart
     let freq = calculateBaseFrequency(inputSequence);
     baseFreqChart.innerHTML = `
         <div class="bar" style="height: ${freq.A * 5}px;">A: ${freq.A}</div>
@@ -145,7 +136,6 @@ function convertSequence() {
         <div class="bar" style="height: ${freq.G * 5}px;">G: ${freq.G}</div>
     `;
 
-    // Sequence Alignment
     let compareSeq = compareInput.value.toUpperCase().trim();
     if (compareSeq) {
         let alignmentScore = simpleAlignment(inputSequence, compareSeq);
@@ -154,13 +144,11 @@ function convertSequence() {
         alignmentOutput.innerText = "";
     }
 
-    // GC Content and Tm
     let gcContent = calculateGCContent(inputSequence);
     let tm = calculateTm(inputSequence);
     sequenceStats.innerText = `Length: ${inputSequence.length} | Codons: ${codons.length} | GC Content: ${gcContent}% | Tm: ${tm}°C`;
 }
 
-// Helper Functions
 function resetOutputs() {
     rnaOutput.innerText = "";
     complementOutput.innerText = "";
@@ -256,12 +244,12 @@ function simpleAlignment(seq1, seq2) {
     return score;
 }
 
-function generateRandomSequence(length = 30, isRNA = false) {
+function generateRandomSequence(length = 30) {
+    const isRNA = reverseMode.checked; // Check mode at runtime
     const bases = isRNA ? ["A", "U", "C", "G"] : ["A", "T", "C", "G"];
     return Array.from({ length }, () => bases[Math.floor(Math.random() * 4)]).join("");
 }
 
-// Copy RNA/DNA Sequence
 function copyRNA() {
     let outputText = rnaOutput.innerText;
     if (!outputText || outputText.startsWith("⚠️")) return;
@@ -277,7 +265,6 @@ function copyRNA() {
     }, 2000);
 }
 
-// Export All Data
 function exportAll() {
     let data = [
         `${outputLabel.innerText}: ${rnaOutput.innerText}`,
@@ -296,7 +283,6 @@ function exportAll() {
     link.click();
 }
 
-// Event Listeners
 document.getElementById("clearBtn").addEventListener("click", () => {
     dnaInput.value = "";
     compareInput.value = "";
@@ -332,7 +318,7 @@ showComplement.addEventListener("change", convertSequence);
 reverseComplement.addEventListener("change", convertSequence);
 
 document.getElementById("randomSeqBtn").addEventListener("click", () => {
-    dnaInput.value = generateRandomSequence(30, reverseMode.checked); // Pass isRNA based on mode
+    dnaInput.value = generateRandomSequence();
     convertSequence();
 });
 
