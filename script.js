@@ -256,8 +256,8 @@ function simpleAlignment(seq1, seq2) {
     return score;
 }
 
-function generateRandomDNA(length = 30) {
-    const bases = ["A", "T", "C", "G"];
+function generateRandomSequence(length = 30, isRNA = false) {
+    const bases = isRNA ? ["A", "U", "C", "G"] : ["A", "T", "C", "G"];
     return Array.from({ length }, () => bases[Math.floor(Math.random() * 4)]).join("");
 }
 
@@ -332,7 +332,7 @@ showComplement.addEventListener("change", convertSequence);
 reverseComplement.addEventListener("change", convertSequence);
 
 document.getElementById("randomSeqBtn").addEventListener("click", () => {
-    dnaInput.value = generateRandomDNA();
+    dnaInput.value = generateRandomSequence(30, reverseMode.checked); // Pass isRNA based on mode
     convertSequence();
 });
 
