@@ -50,9 +50,8 @@ function convertSequence() {
     let inputSequence = dnaInput.value.toUpperCase().trim();
     let isReverse = reverseMode.checked;
     let outputText = "";
-    let dnaSequence = ""; // To store the DNA sequence for restriction sites
+    let dnaSequence = "";
 
-    // Validation
     if (!inputSequence) {
         resetOutputs();
         return;
@@ -65,7 +64,7 @@ function convertSequence() {
             return;
         }
         outputText = inputSequence.replace(/U/g, "T");
-        dnaSequence = outputText; // In reverse mode, output is DNA
+        dnaSequence = outputText;
         outputLabel.innerText = "DNA Sequence:";
     } else {
         if (!/^[ATCG]+$/.test(inputSequence)) {
@@ -74,17 +73,17 @@ function convertSequence() {
             return;
         }
         outputText = inputSequence.replace(/T/g, "U");
-        dnaSequence = inputSequence; // In normal mode, input is DNA
+        dnaSequence = inputSequence;
         outputLabel.innerText = "RNA Sequence:";
     }
 
     validationFeedback.innerText = "";
     rnaOutput.innerText = outputText;
 
-    // Complementary Strand
+    // Complementary Strand (Fixed logic)
     let complementText = "";
     if (showComplement.checked) {
-        complementText = getComplement(outputText, isReverse);
+        complementText = getComplement(outputText, !isReverse); // RNA rules for RNA output, DNA rules for DNA output
         if (reverseComplement.checked) {
             complementText = complementText.split("").reverse().join("");
         }
@@ -98,7 +97,7 @@ function convertSequence() {
     let aminoAcids = [];
     let proteinSequence = "";
     let orfs = [];
-    let sequenceForORF = isReverse ? inputSequence : outputText; // Use RNA for ORFs
+    let sequenceForORF = isReverse ? inputSequence : outputText;
     if (sequenceForORF) {
         for (let i = 0; i < sequenceForORF.length; i += 3) {
             let codon = sequenceForORF.substring(i, i + 3);
@@ -129,7 +128,7 @@ function convertSequence() {
         orfList.innerHTML = "";
     }
 
-    // Restriction Sites (always check DNA sequence)
+    // Restriction Sites
     let restrictionSites = findRestrictionSites(dnaSequence);
     restrictionList.innerHTML = restrictionSites.length ? restrictionSites.map(site => `<li>${site}</li>`).join("") : "<li>No restriction sites found</li>";
 
@@ -321,7 +320,7 @@ document.getElementById("exportAllBtn").addEventListener("click", exportAll);
 document.getElementById("themeToggle").addEventListener("click", () => {
     document.body.classList.toggle("light-mode");
     let themeBtn = document.getElementById("themeToggle");
-    themeBtn.innerText = document.body.classList.contains("light-mode") ? "🌞 Light Mode" : "🌙 Dark Mode";
+    themeBtn.innerText = document.body.classList.contains("light-mode") ? "🌞" : "🌙";
 });
 
 reverseMode.addEventListener("change", () => {
